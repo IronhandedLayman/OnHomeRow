@@ -1,5 +1,21 @@
 from manim import *
 
+class BoolConst:
+    def __init__(self, value=False):
+        self.value = value
+
+    def val(self):
+        return self.value
+
+    def __str__(self):
+        return "1" if self.value else "0" 
+
+    def latex(self):
+        return "1" if self.value else "0" 
+
+T = BoolConst(True)
+F = BoolConst(False)
+
 class BoolVar:
     def __init__(self, name=""):
         self.name = name
@@ -17,23 +33,10 @@ class BoolVar:
     def latex(self):
         return self.name
 
-class BoolConst:
-    def __init__(self, value=False):
-        self.value = value
-
-    def val(self):
-        return self.value
-
-    def __str__(self):
-        return "1" if self.value else "0" 
-
-    def latex(self):
-        return "1" if self.value else "0" 
-
-
 class BoolOp:
-    def __init__(self):
-        self.name = ""
+    def __init__(self, name, lname):
+        self.name = name
+        self.lname = lname
 
     def val(self,lhs,rhs):
         return None 
@@ -44,43 +47,44 @@ class BoolOp:
             ans = str(lhs)
         ans += " " + self.name
         if rhs is not None:
-            ans += " " + str(self.rhs) 
+            ans += " " + str(rhs) 
         return ans
 
-    def latex(self):
+    def latex(self, lhs=None, rhs=None):
         ans = ""
         if lhs is not None:
             ans = str(lhs)
-        ans += " " + self.name
+        ans += " " + self.lname
         if rhs is not None:
-            ans += " " + str(self.rhs) 
+            ans += " " + str(rhs) 
         return ans
 
 class BoolAnd(BoolOp):
     def __init__(self):
-        self.name = "and"
+        super().__init__("and","\\land")
 
-    def val(self,lhs,rhs):
-        return self.lhs.value() and self.rhs.value()
+    def val(self, lhs, rhs):
+        return lhs.val() and rhs.val()
 
-    def __str__(self, lhs=None, rhs=None):
-        ans = ""
-        if lhs is not None:
-            ans = str(lhs)
-        ans += " and "
-        if rhs is not None:
-            ans += " " + str(self.rhs) 
-        return ans
+BAnd = BoolAnd()
 
-    def latex(self):
-        ans = ""
-        if lhs is not None:
-            ans = self.lhs.latex()
-        ans += " \\land"
-        if rhs is not None:
-            ans += " " + self.rhs.latex() 
-        return ans
-    
+class BoolOr(BoolOp):
+    def __init__(self):
+        super().__init__("or","\\lor")
+
+    def val(self, lhs, rhs):
+        return lhs.val() or rhs.val()
+
+BOr = BoolOr()
+
+class BoolNeg(BoolOp):
+    def __init__(self):
+        super().__init__("not","\\neg")
+
+    def val(self, lhs, rhs):
+        return not rhs.val()
+
+BNeg = BoolNeg()
 
 class BoolExp:
     def __init__(self,lhs,op,rhs):
