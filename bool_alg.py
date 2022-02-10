@@ -41,7 +41,9 @@ class BoolOp:
     def val(self,lhs,rhs):
         return None 
 
-    def __str__(self, lhs=None, rhs=None):
+    # This is different, as we don't print a BoolOp directly, 
+    # but rather we call it in a Visitor pattern.
+    def repr(self, lhs=None, rhs=None):
         ans = ""
         if lhs is not None:
             ans = str(lhs)
@@ -92,11 +94,11 @@ class BoolExp:
         self.lhs = lhs
         self.rhs = rhs
 
-    def value(self):
+    def val(self):
         if self.op is None:
-            return self.lhs.value()
+            return self.lhs.val()
         else:
-            return self.op.value(self.lhs,self.rhs)
+            return self.op.val(self.lhs,self.rhs)
 
     def __str__(self):
         if self.op is None:
