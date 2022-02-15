@@ -1,0 +1,24 @@
+#arch SBNO
+// This is based on the SBN architecture indicated on the page
+// https://tldp.org/HOWTO/Coffee-5.html#ss5.1 
+// In addition there is an IO command
+
+// SBNO intends for
+// 16kb memory
+// one register (A) with 8-bits
+// format is cc(mem), (addr)
+// 00 is SBN, 01 is OUT, 10 is IN, 11 is BRK
+// 4 byte aligned instruction set
+
+
+.data test1
+  0x 01 10 FE F6 00 a5 a5 a5
+  "this is a test"
+
+.code pre
+  SBN $test1+4, $pc+4
+.code main
+  SBN $test1+2, $pc+4 
+  OUT
+  SBN $test1+1, $pre
+  BRK
