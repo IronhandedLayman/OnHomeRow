@@ -27,4 +27,7 @@ Every stream will be at 10pm EST unless otherwise scheduled or indicated. Every 
 
 ## Future Schedule
 
-- Ep. 5: Mon 14 Feb 2022: Project initiation: plan out the construction of an assembler.
+- Ep. 5: Mon 14 Feb 2022(9pm EST): Project initiation: plan out the construction of an assembler.
+- Ep. 6: Tue 15 Feb 2022: Turing Complete: Finishing arithmetic, revisit byte adder to do a Carry Lookahead Adder
+- Ep. 7: Wed 16 Feb 2022: Assembler part 2: Topic depend on pace
+- Ep. 8: Thu 17 Feb 2022: Turing Complete: Let's start building the computer!
