@@ -23,11 +23,13 @@ Officially numbered episodes: (aired at 10pm EST unless otherwise specified)
 - Ep. 4: Sun 13 Feb 2022: Day 2 of the playthrough, learning about memory and arithmetic if time allows 
 - Ep. 5: Mon 14 Feb 2022(9pm EST): Project initiation: plan out the construction of an assembler.
 - Ep. 6: Tue 15 Feb 2022: Turing Complete: Finishing arithmetic
+- Ep. 7: Wed 16 Feb 2022: Assembler part 2: Learning the pyparsing library
+- Ep. 8: Thu 17 Feb 2022(10:30pm EST): Turing Complete: Build the computer
 
 ## Time of the stream:
 Every stream will be at 10pm EST unless otherwise scheduled or indicated. Every stream will last an hour unless the topic takes me over.
 
 ## Future Schedule
 
-- Ep. 7: Wed 16 Feb 2022: Assembler part 2: Learning the pyparsing library
-- Ep. 8: Thu 17 Feb 2022: Turing Complete: Carry Look-ahead Adder
+- Ep. 9: Sun 20 Feb 2022: Assembler part 3: Implementing OVERTURE
+- Ep. 10: Mon 20 Feb 2022: Turing Complete: Programming levels with OVERTURE architecture
