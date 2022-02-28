@@ -6,24 +6,52 @@ from pyparsing import QuotedString, Opt, LineStart, oneOf, StringStart
 from pyparsing import delimited_list
 from pyparsing import alphas, alphanums
 from pyparsing import ParseException, Suppress, ParserElement, Forward
+from pyparsing import infixNotation, opAssoc
+from pyparsing import Regex
 import argparse as ap
 
 VERSION="0.0"
 
-PARSER_LANG="""
-#arch SBNO 
-TODO:    inline expressions and pre-calculated values
-"""
-
-# ParserElement.enable_lr_parsing()
+ParserElement.enable_packrat()
 
 # Start off with the building blocks
 # an Identifier is simply an alphanumeric word.
 IDENTIFIER=Word(alphas, alphanums)
 OPCODE=Word(alphas)
-EXPRESSION=Word(alphanums+"+-*/%$") # placeholder: TODO is to make this work correctly
-# EXPRESSIONS = Forward()
-# EXPRESSIONS <<= Group(EXPRESSION + Opt(Suppress(Literal(","))+EXPRESSIONS))
+
+NUMBER = Regex(r'(0[bx])?[0-9a-f]+')
+VARIABLE = Literal('$')+Word(alphanums)
+REGISTER = Literal('%')+Word(alphanums)
+OPERAND = NUMBER | VARIABLE | REGISTER
+
+NOTOP = Literal('^') #bitwise not
+TWOSOP = Literal('~') #two's compliment
+
+ADDOP = Literal('+')
+SUBOP = Literal('-')
+MULTOP = Literal('*')
+ANDOP = Literal('&')
+OROP = Literal('|')
+RLOP = Literal('<<')
+RROP = Literal('>>')
+
+EXPRESSION = infixNotation(
+        OPERAND,
+        [ 
+            (NOTOP,1,opAssoc.RIGHT,None ),
+            (TWOSOP,2,opAssoc.LEFT,None),
+            (ADDOP,2,opAssoc.LEFT,None ),
+            (SUBOP,2,opAssoc.LEFT,None ),
+            (MULTOP,2,opAssoc.LEFT,None),
+            (ANDOP,2,opAssoc.LEFT,None ),
+            (OROP,2,opAssoc.LEFT,None ),
+            (RLOP,2,opAssoc.LEFT,None ),
+            (RROP,2,opAssoc.LEFT,None ),
+        ],
+)
+
+
+EXPRESSIONS = delimited_list(EXPRESSION)
 
 # aaaaaaa,b,c,d,e
 #          
@@ -57,7 +85,7 @@ ASCII_LINE = Suppress(ASCII_START) + Group(QuotedString("\"")("text")) + EOL
 
 # Code lines:
 # a code line is in the form OPCODE EXPR1,EXPR2,EXPR3... EOL as above
-CODE_LINE = Group(OPCODE("opcode") + Opt(delimited_list(EXPRESSION, combine=True)("args"))) + EOL
+CODE_LINE = Group(OPCODE("opcode") + Opt(EXPRESSIONS)("args")) + EOL
 
 IHASM_PARSER = StringStart() + OneOrMore(PRAGMA | COMMENT_LINE | DATA_LINE | LABEL_LINE | ASCII_LINE | CODE_LINE) + StringEnd()
 
