@@ -18,7 +18,7 @@
 .label pre
   SBN $test1+4, $pc+4
 .label main
-  SBN $test1+2, $pc+4 
+  SBN $test1+2, $pc+4,
   OUT
   SBN $test1+1, $pre
-  BRK
+  OUT
