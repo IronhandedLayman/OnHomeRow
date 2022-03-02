@@ -12,6 +12,24 @@ import argparse as ap
 
 VERSION="0.0"
 
+## the AST of the IHASM assembler blocks
+
+class IhasmTree:
+    def __init__(self, termType, elem, insPoint, children=None):
+        self.contents = elem
+        self.termType = termType 
+        self.children = children
+        self.insPoint = insPoint
+
+    def byteLen(self):
+        ans = len(self.elem)
+        if self.children is not None:
+            ans+= sum(x.byteLen() for x in self.children)
+        return ans 
+
+
+## Parser elements below
+
 ParserElement.enable_packrat()
 
 # Start off with the building blocks
@@ -82,6 +100,9 @@ LABEL_LINE = Suppress(LABEL_START) + Group(IDENTIFIER("label")) + EOL
 # Ascii lines need to have a quoted string in it
 ASCII_START = Literal(".ascii")
 ASCII_LINE = Suppress(ASCII_START) + Group(QuotedString("\"")("text")) + EOL
+@ASCII_LINE.setParseAction
+def parseAsciiIntoTree(tokens):
+    return IhasmTree("text",tokens[0]["text"],0)
 
 # Code lines:
 # a code line is in the form OPCODE EXPR1,EXPR2,EXPR3... EOL as above

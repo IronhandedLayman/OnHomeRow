@@ -13,21 +13,34 @@ import argparse as ap
 # pyparsing.enable_left_recursion()
 ParserElement.enable_packrat()
 
-NUMBER = Regex(r'[1-9][0-9]*')
-ADDOP = Literal('+')
-SUBOP = Literal('-')
+def tokenAction(something):
+    print("Hey look a token! " + repr(something))
+
+def recognizeInteger(x):
+    return int(x[0])
+    
+
+NUMBER = Regex(r'[1-9][0-9]*').setParseAction(recognizeInteger)
+ADDOP = Literal('+').setParseAction(tokenAction)
+SUBOP = Literal('-').setParseAction(tokenAction)
+
+def addAction(ops):
+    return ops[0][0] + ops[0][2] 
+
+def subAction(ops):
+    print(repr(ops))
+    return ops[0][0] - ops[0][2] 
 
 EXPR = infixNotation(
         NUMBER,
         [
-            (ADDOP, 2, opAssoc.RIGHT, None),
-            (SUBOP, 2, opAssoc.RIGHT, None),
+            (ADDOP, 2, opAssoc.RIGHT, addAction),
+            (SUBOP, 2, opAssoc.LEFT, subAction),
         ],
 )
 
 def main():
-    print("hi")
-    print(repr(EXPR.parseString("1 + 2 + 3")))
+    print(repr(EXPR.parseString("1-2-3-4-5")))
 
 
 if __name__=="__main__":

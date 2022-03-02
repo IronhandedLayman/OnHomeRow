@@ -22,5 +22,4 @@
   OUT;
   SBN $test1+1, $pre
   OUT;
-  CMON;
 
