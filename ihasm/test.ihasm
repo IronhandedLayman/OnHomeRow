@@ -12,11 +12,11 @@
 
 
 .label test1
-  .data 0x 01 10 FE F6 00 a5 a5 a5
+  .data 01 10 FE F6 00 a5 a5 a5
   .ascii "this is a test"
 
 .label pre
-  SBN $test1+4, $pc+4
+  SBN $test1+4, $pc+4 ;this is a test
 .label main
   SBN $test1+2, $pc+4
   OUT;

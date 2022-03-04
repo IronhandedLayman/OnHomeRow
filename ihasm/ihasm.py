@@ -15,11 +15,13 @@ VERSION="0.0"
 ## the AST of the IHASM assembler blocks
 
 class IhasmTree:
-    def __init__(self, termType, elem, insPoint, children=None):
+    def __init__(self, termType, elem, children=None, label=None, comment=None, loc=None):
+        self.source_location = loc
+        self.comment = comment
         self.contents = elem
         self.termType = termType 
         self.children = children
-        self.insPoint = insPoint
+        self.label = label
 
     def byteLen(self):
         ans = len(self.elem)
@@ -27,6 +29,15 @@ class IhasmTree:
             ans+= sum(x.byteLen() for x in self.children)
         return ans 
 
+    def __repr__(self):
+        if self.label is not None:
+            return f'@{self.label}[{self.termType}]:[{self.contents}]'
+        else:
+            return f'[{self.termType}]:[{self.contents}]'
+
+
+ihasm_tree_root=IhasmTree("top",None)
+ihasm_pragmas = {}
 
 ## Parser elements below
 
@@ -81,10 +92,23 @@ PRAGMA_IDENTIFIER=IDENTIFIER("pragma_identifier")
 PRAGMA_VALUE=IDENTIFIER("pragma_value")
 
 PRAGMA=Group(Suppress(PRAGMA_START)+PRAGMA_IDENTIFIER+PRAGMA_VALUE+LDLIM)
+@PRAGMA.setParseAction
+def globalSettings(loc, pragma_terminal):
+    global ihasm_pragmas
+    key = pragma_terminal[0]["pragma_identifier"]
+    val = pragma_terminal[0]["pragma_value"]
+    print(f'DEBUG: setting pragma {key} to {val}')
+    ihasm_pragmas[key]=val
+    return [] #maybe Suppresses the token?
 
 # Comments start with a semicolon, always extend to end of line. 
 COMMENT_START = Literal(";")
 COMMENT_LINE = Suppress(COMMENT_START) + Group(SkipTo(LineEnd())("comment")) + LDLIM
+@COMMENT_LINE.setParseAction
+def rememberComments(loc, token):
+    return []
+    # TODO: Parse comments correctly instead of just throwing them away 
+    # return IhasmTree("comment",[],comment=token[0]["comment"],loc=loc)
 
 # Bundled comments into EOL to get comments on any line for free.
 EOL = COMMENT_LINE | LDLIM
@@ -92,21 +116,36 @@ EOL = COMMENT_LINE | LDLIM
 # Data lines start with the literal .data and continue with a string of hexadecimal words
 DATA_START = Literal(".data")
 DATA_LINE = Suppress(DATA_START) + Group(SkipTo(EOL)("data")) + EOL
+@DATA_LINE.setParseAction
+def dataToken(s, loc, token):
+    dataString = token[0]['data'].strip()
+    dataString = "".join(dataString.split(" +"))
+    try:
+        dataOctets = [int(dataString[x:x+2],16) for x in range(0,len(dataString), 2)]
+        return IhasmTree("data",dataOctets,loc=loc)
+    except ValueError as ex:
+        raise ParseException(s, loc, str(ex), self)
 
 # Labels need to be a legal identifier
 LABEL_START = Literal(".label")
 LABEL_LINE = Suppress(LABEL_START) + Group(IDENTIFIER("label")) + EOL
+@LABEL_LINE.setParseAction
+def labelHandler(s, loc, tok):
+    return IhasmTree("label",None,label=tok[0]['label'])
 
 # Ascii lines need to have a quoted string in it
 ASCII_START = Literal(".ascii")
 ASCII_LINE = Suppress(ASCII_START) + Group(QuotedString("\"")("text")) + EOL
 @ASCII_LINE.setParseAction
-def parseAsciiIntoTree(tokens):
-    return IhasmTree("text",tokens[0]["text"],0)
+def parseAsciiIntoTree(loc, tokens):
+    return IhasmTree("text",[ord(x) for x in tokens[0]["text"]], loc=loc)
 
 # Code lines:
 # a code line is in the form OPCODE EXPR1,EXPR2,EXPR3... EOL as above
 CODE_LINE = Group(OPCODE("opcode") + Opt(EXPRESSIONS)("args")) + EOL
+@CODE_LINE.setParseAction
+def instr_handle(s, loc, tok):
+    return IhasmTree("instr",{'opcode':tok[0]['opcode'], 'args':tok[0][1:]})
 
 IHASM_PARSER = StringStart() + OneOrMore(PRAGMA | COMMENT_LINE | DATA_LINE | LABEL_LINE | ASCII_LINE | CODE_LINE) + StringEnd()
 
