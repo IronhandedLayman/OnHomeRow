@@ -1,0 +1,30 @@
+#arch LEG
+; LEG architecture is dictated by the game Turing Complete
+; 256 bytes of RAM
+; 256 bytes of CODE (ROM - not modifiable)
+; 32-bit instruction set
+; 8 registers (r0-r5, PC, IO)
+; opcode arg1 arg2 arg3, arg 1 and 2 are input, 3 is output
+; ADD(0), SUB(1), AND(2), OR(3), NOT(4), XOR(5) 
+;  are all arithmetic operations a1 OP a2 -> a3
+; JEQ(32), JNE(33), JLT(34), JLE(35), JGR(36), JGE(37) 
+;  are all conditionals: a1 is tested against a2, jump to a3 if true
+; Numbers are immediate (or opcode with 128 if a1 is imm, 64 if a2 is immed)
+; LOAD(8), SAVE(9), BREAK(10)
+;  are move commands that takes a1 and moves it to a3 either from or to the memory 
+
+
+; Hello world
+.label message
+  .ascii "Hello world"
+  .data 00
+
+.label main
+  LOAD $message, %r1, %r2
+  JEQ %r2, 00, $done
+  ADD %r2, 00, %io
+  ADD %r1, 01, %r1
+  ADD $main, 00, %pc
+
+.label done
+  BREAK
