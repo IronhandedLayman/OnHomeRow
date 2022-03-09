@@ -16,6 +16,7 @@ VERSION="0.0"
 
 class LEGArch:
 
+    PP = pprint.PrettyPrinter(indent=2)
     OPCODE_MAP={
             "ADD":0, 
             "SUB":1, 
@@ -33,6 +34,11 @@ class LEGArch:
             "SAVE":9, 
             "BREAK":10,
     }
+
+    #if first argument is immediate (it is a number) then opcode |= 128
+    FIRST_ARG_IMM = 128
+    #if second argument is immediate (it is a number) then opcode |= 64
+    SECOND_ARG_IMM = 128
 
     REGISTER_MAP={
             "r0":0,
@@ -56,37 +62,75 @@ class LEGArch:
     def build(self, ast, pragmas):
         self.pragmas = pragmas
         #grab variables and parse semantics
-        self.sem_parse1(ast) 
-        return None
+        file_length = self.sem_parse1(ast) 
+        ba = bytearray(file_length)
+        self.sem_parse2(ba, ast) 
+        return ba
 
     def sem_parse1(self, ast, blen=0):
+        print(f'Semantic parse first pass at {repr(ast)} pointer at {blen}')
         if ast.children is not None:
             for ast_child in ast.children:
-                blen = self.sem_parse(ast_child, blen)
+                blen = self.sem_parse1(ast_child, blen)
         termtype = ast.termType
+        ast.ptr=blen
+        new_ptr=blen
         if termtype=="asm":
+            new_ptr = blen
             return blen
         elif termtype=="label":
-            self.variables[ast.elem]=blen
-            return blen
-        elif termtype=="ascii":
-            return blen + len(ast.elem)
+            self.variables[ast.label]=blen
+            new_ptr = blen
+        elif termtype=="text":
+            new_ptr = blen + len(ast.elem)
         elif termtype=="data":
-            return blen + len(ast.elem)
-        elif termtype=="opcode":
+            new_ptr = blen + len(ast.elem)
+        elif termtype=="instr":
             if ast.elem not in LEGArch.OPCODE_MAP:
-                raise Exception('Illegal opcode {ast.elem}')
-            return blen+4
+                raise Exception(f'Illegal opcode {ast.elem}')
+            new_ptr = blen+4
         elif termtype=="number":
             if ast.elem < 0 or ast.elem > 255:
-                raise Exception('Illegal number {ast.elem}')
-            return blen
+                raise Exception(f'Illegal number {ast.elem}')
+            new_ptr = blen
         elif termtype=="variable":
-            return blen
+            new_ptr = blen
         elif termtype=="register":
-            if ast.elem not in LEGArch.OPCODE_MAP:
-                raise Exception('Illegal opcode {ast.elem}')
-            return blen
+            if ast.elem not in LEGArch.REGISTER_MAP:
+                raise Exception(f'Illegal opcode {ast.elem}')
+            new_ptr = blen
+        return new_ptr
+
+    def sem_parse2(self, ba, ast):
+        print(f'Semantic parse second pass at {repr(ast)} bytearray is {ba}')
+        if ast.children is not None and ast.termType != "instr":
+            for ast_child in ast.children:
+                ba = self.sem_parse2(ba, ast_child)
+        termtype = ast.termType
+        ptr = ast.ptr
+        if termtype=="data" or termtype=="text":
+            for i in range(len(ast.elem)):
+                ba[ptr+i]=ast.elem[i]
+        elif termtype=="instr":
+            opcbyte = LEGArch.OPCODE_MAP[ast.elem]
+            args = ast.children
+            if len(args)>0 and args[0].termType != "register":
+                opcbyte = opcbyte | LEGArch.FIRST_ARG_IMM
+            if len(args)>0 and args[1].termType != "register":
+                opcbyte = opcbyte | LEGArch.SECOND_ARG_IMM
+            instr_bytes = bytearray(4)
+            instr_bytes[0]=opcbyte
+            for idx,x in enumerate(args):
+                if x.termType == "number":
+                    instr_bytes[1+idx]=x.elem
+                elif x.termType == "register":
+                    instr_bytes[1+idx]=LEGArch.REGISTER_MAP[x.elem]
+                elif x.termType == "variable":
+                    instr_bytes[1+idx]=self.variables[x.elem]
+            for i in range(len(instr_bytes)):
+                print(f'writing byte {instr_bytes[i]} into location {ptr+i}')
+                ba[ptr+i]=instr_bytes[i]
+        return ba
 
 
 
@@ -101,18 +145,20 @@ class IhasmTree:
     def __init__(self, termType, elem, children=None, label=None, comment=None, loc=None):
         self.source_location = loc
         self.comment = comment
-        self.contents = elem
+        self.elem = elem
         self.termType = termType 
         self.children = children
         self.label = label
+        self.ptr = None
+        self.loc = loc
 
     def __repr__(self):
         if self.label is not None:
-            return f'@{self.label}[{self.termType}]:[{self.contents}]'
+            return f'@{self.label}[{self.termType}]:[{self.elem}]'
         elif self.children is not None:
-            return f'[{self.termType}]:[{self.contents}]({self.children})'
+            return f'[{self.termType}]:[{self.elem}]({self.children})'
         else:
-            return f'[{self.termType}]:[{self.contents}]'
+            return f'[{self.termType}]:[{self.elem}]'
 
 
 ihasm_pragmas = {}
@@ -187,7 +233,7 @@ def globalSettings(loc, pragma_terminal):
     global ihasm_pragmas
     key = pragma_terminal[0]["pragma_identifier"]
     val = pragma_terminal[0]["pragma_value"]
-    print(f'DEBUG: setting pragma {key} to {val}')
+    # print(f'DEBUG: setting pragma {key} to {val}')
     ihasm_pragmas[key]=val
     return [] #maybe Suppresses the token?
 
@@ -276,9 +322,7 @@ def assemble_file(args):
     ihasm_ast = None
     pp = pprint.PrettyPrinter(indent=2)
     try:
-        ihasm_ast = IHASM_FILE.parseFile(args.source_file)
-        print("File parses as:")
-        pp.pprint(ihasm_ast[0])
+        ihasm_ast = IHASM_FILE.parseFile(args.source_file)[0]
     except ParseException as err:
         print(err.explain())
         exit(1)
@@ -289,9 +333,9 @@ def assemble_file(args):
         print(f'Architecture {ihasm_pragmas["arch"]} not registered')
         exit(1)
     try:
-        code_binary = ihasm_arch[ihasm_pragmas["arch"]].build(args.object_file,ihasm_pragmas)
+        code_binary = ihasm_arch[ihasm_pragmas["arch"]].build(ihasm_ast,ihasm_pragmas)
     except Exception as ex:
-        print(f'error with the code generation: {ex}')
+        print(f'error with the code generation: {repr(ex)}')
         exit(1)
 
     args.object_file.write(code_binary)

@@ -17,11 +17,11 @@
 ; Hello world
 .label message
   .ascii "Hello world"
-  .data 00
+  .data 0
 
 .label main
   LOAD $message, %r1, %r2
-  JEQ %r2, 00, $done
+  JEQ %r2, a5, $done
   ADD %r2, 00, %io
   ADD %r1, 01, %r1
   ADD $main, 00, %pc
