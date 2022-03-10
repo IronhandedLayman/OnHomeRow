@@ -14,6 +14,16 @@ This is the repository for a streaming show I put out at least on Mondays at 10p
 - -2.5: 31 Jan
 - -1: 2 Feb
 
+## Next episode
+
+- Ep. 22: Thu 10 Mar 2022: Building larger code in Turing Complete
+
+## Future Schedule
+
+- Ep. 23: Sun 13 Mar 2022: Complete change of tack, PROJECT UM!
+
+## Historical episodes
+
 Officially numbered episodes: (aired at 10pm EST unless otherwise specified)
 
 - Ep. 1: Mon 7 Feb 2022: Crash course on Boolean algebra, and some way to automatically draw some circuits with Manim to use in discussing the logic in Turing Complete.
@@ -35,14 +45,11 @@ Officially numbered episodes: (aired at 10pm EST unless otherwise specified)
 - Ep. 17: Thu 3 Mar 2022: IHASM: GROWING A TREE
 - Ep. 18: Sun 6 Mar 2022: IHASM: Finish the AST and worked on building a binary
 - Ep. 19: Mon 7 Mar 2022: Functional Turing Complete
+- Ep. 20: Tue 8 Mar 2022: Adding LEG architecture to IHASM
+- Ep. 21: Wed 9 Mar 2022: Stacked Turing Complete
 
 ## Time of the stream:
 Every stream will be at 10:05pm EST unless otherwise scheduled or indicated. Every stream will last an hour unless the topic takes me over.
 
-## Future Schedule
-
-- Ep. 20: Tue 8 Mar 2022: Adding LEG architecture to IHASM
-- Ep. 21: Wed 9 Mar 2022: LeetCode in Turing Complete
-- Ep. 22: Thu 10 Mar 2022: Building larger code in Turing Complete
 
 Stay tuned for a new third project!
