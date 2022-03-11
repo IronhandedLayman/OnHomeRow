@@ -16,11 +16,14 @@ This is the repository for a streaming show I put out at least on Mondays at 10p
 
 ## Next episode
 
-- Ep. 22: Thu 10 Mar 2022: Building larger code in Turing Complete
+- Ep. 22: Thu 10 Mar 2022: Using IHASM in Turing Complete!
 
 ## Future Schedule
 
-- Ep. 23: Sun 13 Mar 2022: Complete change of tack, PROJECT UM!
+- Ep. 23: Sun 13 Mar 2022: PROJECT UM and the Cult of the Bound Variable part 1 of MANY
+- Ep. 24: Mon 14 Mar 2022: Finishing up remaining challenges in Turing Complete if any
+- Ep. 25: Tue 15 Mar 2022: PROJECT UM and the Cult of the Bound Variable part 2
+- Ep. 26: Wed 16 Mar 2022: Turing Complete: Creating the UM Assembler part 1
 
 ## Historical episodes
 
