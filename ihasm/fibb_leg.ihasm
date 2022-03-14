@@ -1,0 +1,15 @@
+#arch LEG
+; Fibonacci test for Turing Complete integration
+
+.label init
+  ADD 0, 0, %r0
+  ADD 0, 1, %r1
+.label loop
+  CALL %pc, 4, $shiftadd
+  ADD 0, %r1, %io
+  JEQ 0, 0, $loop
+.label shiftadd
+  ADD %r0, %r1, %r2
+  ADD 0, %r1, %r0
+  ADD 0, %r2, %r1
+  RET 0, 0, %pc

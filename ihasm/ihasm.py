@@ -32,13 +32,17 @@ class LEGArch:
             "JGE":37,
             "LOAD":8, 
             "SAVE":9, 
-            "BREAK":10,
+            "PUSH":10,
+            "POP":11,
+            "CALL":12,
+            "RET":13,
+            "BREAK":255,
     }
 
     #if first argument is immediate (it is a number) then opcode |= 128
     FIRST_ARG_IMM = 128
     #if second argument is immediate (it is a number) then opcode |= 64
-    SECOND_ARG_IMM = 128
+    SECOND_ARG_IMM = 64
 
     REGISTER_MAP={
             "r0":0,
