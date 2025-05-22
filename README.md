@@ -3,23 +3,23 @@ On Home Row
 
 ## Abstract
 
-This is the repository for a streaming show I put out at least on Mondays at 10pm EST, on various topics related to programming, computer science, programming games, math excursions, odd philosophies, and ill-fated projects. 
+This is the repository for a streaming show I put out weekly, on various topics
+related to programming, computer science, programming games, math excursions,
+odd philosophies, and ill-fated projects. 
 
-## Previous episodes
-
-- Project minus episodes (about setting up the channel, playing with streaming, and getting the OBS logic right)
-- -5: 25 Jan
-- -4: 27 Jan
-- -3: 30 Jan
-- -2.5: 31 Jan
-- -1: 2 Feb
 
 ## Next episode
 
-- Ep. 22: Thu 10 Mar 2022: Using IHASM in Turing Complete!
+- S2E1: Tue 27 May 2025: Reboot of the On Home Row show, discussion about future content, ideas for topics...
 
 ## Future Schedule
 
+- S2E2: Wed 28 May 2025: (Possible) Making a sudoku game/engine/puzzle
+- S2E3: Thu 29 May 2025: (Possible) Setting up NixOS from the ground up on a small test system
+
+## Cancelled episodes of Season 1 of On Home Row
+
+- Ep. 22: Thu 10 Mar 2022: Using IHASM in Turing Complete!
 - Ep. 23: Sun 13 Mar 2022: PROJECT UM and the Cult of the Bound Variable part 1 of MANY
 - Ep. 24: Mon 14 Mar 2022: Finishing up remaining challenges in Turing Complete if any
 - Ep. 25: Tue 15 Mar 2022: PROJECT UM and the Cult of the Bound Variable part 2
@@ -51,8 +51,15 @@ Officially numbered episodes: (aired at 10pm EST unless otherwise specified)
 - Ep. 20: Tue 8 Mar 2022: Adding LEG architecture to IHASM
 - Ep. 21: Wed 9 Mar 2022: Stacked Turing Complete
 
+## Previous episodes
+
+- Project minus episodes (about setting up the channel, playing with streaming, and getting the OBS logic right)
+- -5: 25 Jan
+- -4: 27 Jan
+- -3: 30 Jan
+- -2.5: 31 Jan
+- -1: 2 Feb
+
 ## Time of the stream:
-Every stream will be at 10:05pm EST unless otherwise scheduled or indicated. Every stream will last an hour unless the topic takes me over.
 
-
-Stay tuned for a new third project!
+Currently, I need this stream to be irregular, until I get into a flow that allows me to work and play with this channel.
