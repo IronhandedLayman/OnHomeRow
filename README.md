@@ -10,12 +10,16 @@ odd philosophies, and ill-fated projects.
 
 ## Next episode
 
-- S2E1: Tue 27 May 2025: Reboot of the On Home Row show, discussion about future content, ideas for topics...
+- S1.5E1: Thu 22 May 2025: Dust off the old codebase and let's prepare to do good work
+- S1.5E2: Fri 23 May 2025: Let's add some automation to how I mange the OHR page
+- S1.5E3: Sat 24 May 2025: Music? Let's use SonicPI. New Graphics? Let's use Manim!
+- S1.5E4: Mon 26 May 2025: Dress rehearsal for Tuesday night
 
 ## Future Schedule
 
-- S2E2: Wed 28 May 2025: (Possible) Making a sudoku game/engine/puzzle
-- S2E3: Thu 29 May 2025: (Possible) Setting up NixOS from the ground up on a small test system
+- S2E1: Tue 27 May 2025: Reboot of the On Home Row show, discussion about future content, ideas for topics...
+- S2E2: Wed 28 May 2025: (Possible) Making a sudoku game/engine/puzzle part 1
+- S2E3: Thu 29 May 2025: (Possible) Setting up NixOS from the ground up on a small test system part 1
 
 ## Cancelled episodes of Season 1 of On Home Row
 
@@ -51,7 +55,7 @@ Officially numbered episodes: (aired at 10pm EST unless otherwise specified)
 - Ep. 20: Tue 8 Mar 2022: Adding LEG architecture to IHASM
 - Ep. 21: Wed 9 Mar 2022: Stacked Turing Complete
 
-## Previous episodes
+## Unbroadcasted episodes
 
 - Project minus episodes (about setting up the channel, playing with streaming, and getting the OBS logic right)
 - -5: 25 Jan
@@ -59,6 +63,7 @@ Officially numbered episodes: (aired at 10pm EST unless otherwise specified)
 - -3: 30 Jan
 - -2.5: 31 Jan
 - -1: 2 Feb
+- Season 1.5 episodes
 
 ## Time of the stream:
 
